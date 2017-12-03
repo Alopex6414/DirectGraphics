@@ -1,13 +1,14 @@
 /*
 *     COPYRIGHT NOTICE
-*     Copyright(c) 2017, Alopex/Helium
+*     Copyright(c) 2017, Team Shanghai Dream Equinox
 *     All rights reserved.
 *
 * @file		DirectGraphics.cpp
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.00a
-* @date		2017-11-2
+* @version	v1.01a
+* @date		2017-11-2	v1.00a	alopex	Create Project
+* @date		2017-12-2	v1.01a	alopex	Add D3DXFont
 */
 #include "DirectCommon.h"
 #include "DirectGraphics.h"
@@ -23,6 +24,7 @@ DirectGraphics::DirectGraphics()
 {
 	m_pD3D9 = NULL;	//IDirect3D9接口指针初始化(NULL)
 	m_pD3D9Device = NULL;	//IDirect3DDevice9接口指针初始化(NULL)
+	m_pD3DXFont = NULL;		//ID3DXFont接口指针初始化(NULL)
 	ZeroMemory(&m_D3D9Caps, sizeof(m_D3D9Caps));	//清空m_D3D9Caps内存区域
 	ZeroMemory(&m_D3D9pp, sizeof(m_D3D9pp));	//清空m_D3D9pp内存区域
 	ZeroMemory(m_wcD3D9AdapterType, sizeof(wchar_t)*ADAPTERTYPESIZE);	//清空m_wcD3D9AdapterType内存区域
@@ -37,6 +39,7 @@ DirectGraphics::DirectGraphics()
 //------------------------------------------------------------------
 DirectGraphics::~DirectGraphics()
 {
+	SAFE_RELEASE(m_pD3DXFont);		//ID3DXFont接口释放
 	SAFE_RELEASE(m_pD3D9Device);	//IDirect3D9接口指针释放
 	SAFE_RELEASE(m_pD3D9);	//IDirect3DDevice9接口指针释放
 }
@@ -415,4 +418,75 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsClear(DWORD dwColor)
 {
 	VERIFY(m_pD3D9Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, dwColor, 1.0f, 0));		//清空图像
 	return S_OK;//OK
+}
+
+//---------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontInit()
+// @Purpose: DirectGraphics 字体初始化
+// @Since: v1.01a
+// @Para: None
+// @Return: HRESULT(初始化状态:成功:S_OK,失败:E_FAIL)
+//---------------------------------------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit()
+{
+	VERIFY(D3DXCreateFont(m_pD3D9Device, 20, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, _T("Consolas"), &m_pD3DXFont));
+	return S_OK;//OK
+}
+
+//---------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontInit(int nFontSize)
+// @Purpose: DirectGraphics 字体初始化
+// @Since: v1.01a
+// @Para: int nFontSize		//字体大小
+// @Return: HRESULT(初始化状态:成功:S_OK,失败:E_FAIL)
+//---------------------------------------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize)
+{
+	VERIFY(D3DXCreateFont(m_pD3D9Device, nFontSize, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, _T("Consolas"), &m_pD3DXFont));
+	return S_OK;//OK
+}
+
+//---------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType)
+// @Purpose: DirectGraphics 字体初始化
+// @Since: v1.01a
+// @Para: int nFontSize			//字体大小
+// @Para: LPWSTR lpszFontType	//字体类型
+// @Return: HRESULT(初始化状态:成功:S_OK,失败:E_FAIL)
+//---------------------------------------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType)
+{
+	VERIFY(D3DXCreateFont(m_pD3D9Device, nFontSize, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, lpszFontType, &m_pD3DXFont));
+	return S_OK;//OK
+}
+
+//---------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontDrawText(HWND hWnd)
+// @Purpose: DirectGraphics 绘制HAL信息
+// @Since: v1.01a
+// @Para: HWND hWnd		//窗口句柄
+// @Return: None
+//---------------------------------------------------------------------------------------------------
+void WINAPI DirectGraphics::DirectGraphicsFontDrawText(HWND hWnd)
+{
+	RECT Rect;
+
+	GetClientRect(hWnd, &Rect);
+	m_pD3DXFont->DrawText(NULL, m_wcD3D9AdapterType, -1, &Rect, DT_TOP | DT_LEFT, D3DXCOLOR(1.0f, 0.5f, 0.5f, 1.0f));
+}
+
+//---------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontDrawText(D3DXCOLOR dwColor)
+// @Purpose: DirectGraphics 绘制HAL信息
+// @Since: v1.01a
+// @Para: HWND hWnd				//窗口句柄
+// @Para: D3DXCOLOR dwColor		//字体颜色
+// @Return: None
+//---------------------------------------------------------------------------------------------------
+void WINAPI DirectGraphics::DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor)
+{
+	RECT Rect;
+
+	GetClientRect(hWnd, &Rect);
+	m_pD3DXFont->DrawText(NULL, m_wcD3D9AdapterType, -1, &Rect, DT_TOP | DT_LEFT, dwColor);
 }

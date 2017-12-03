@@ -1,13 +1,14 @@
 /*
 *     COPYRIGHT NOTICE
-*     Copyright(c) 2017, Alopex/Helium
+*     Copyright(c) 2017, Team Shanghai Dream Equinox
 *     All rights reserved.
 *
 * @file		DirectGraphics.h
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.00a
-* @date		2017-11-2
+* @version	v1.01a
+* @date		2017-11-2	v1.00a	alopex	Create Project
+* @date		2017-12-2	v1.01a	alopex	Add D3DXFont
 */
 #pragma once
 
@@ -43,6 +44,7 @@ private:
 	IDirect3DDevice9* m_pD3D9Device;	//The Direct3D 9 Render Device
 	D3DCAPS9 m_D3D9Caps;	//The Direct3D 9 Caps
 	D3DPRESENT_PARAMETERS m_D3D9pp;		//The Direct3D 9 Parameters
+	ID3DXFont* m_pD3DXFont;	//The Direct3D 9 Font
 	wchar_t m_wcD3D9AdapterType[ADAPTERTYPESIZE];	//The Direct3D 9 AdapterType(eg:NVIDIA GeForce GT750M)
 
 public:
@@ -66,6 +68,12 @@ public:
 	HRESULT WINAPI DirectGraphicsPresent(void);	//DirectGraphics Present Render
 	HRESULT WINAPI DirectGraphicsClear(void);	//DirectGraphics Clear Screen
 	HRESULT WINAPI DirectGraphicsClear(DWORD dwColor);	//DirectGraphics Clear Screen
+	
+	HRESULT WINAPI DirectGraphicsFontInit();	//DirectGraphicsFont Initialization
+	HRESULT WINAPI DirectGraphicsFontInit(int nFontSize);	//DirectGraphicsFont Initialization
+	HRESULT WINAPI DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType);	//DirectGraphicsFont Initialization
+	void WINAPI DirectGraphicsFontDrawText(HWND hWnd);	//DirectGraphicsFont Draw Text
+	void WINAPI DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor);	//DirectGraphicsFont Draw Text
 };
 
 //Variable Definition
