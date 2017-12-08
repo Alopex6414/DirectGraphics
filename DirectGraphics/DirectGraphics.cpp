@@ -6,9 +6,10 @@
 * @file		DirectGraphics.cpp
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.01a
+* @version	v1.11a
 * @date		2017-11-2	v1.00a	alopex	Create Project
 * @date		2017-12-2	v1.01a	alopex	Add D3DXFont
+* @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library
 */
 #include "DirectCommon.h"
 #include "DirectGraphics.h"
