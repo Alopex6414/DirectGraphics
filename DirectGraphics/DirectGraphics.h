@@ -6,10 +6,12 @@
 * @file		DirectGraphics.h
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.11a
-* @date		2017-11-2	v1.00a	alopex	Create Project
-* @date		2017-12-2	v1.01a	alopex	Add D3DXFont
-* @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library
+* @version	v1.21a
+* @date		2017-11-2	v1.00a	alopex	Create Project.
+* @date		2017-12-2	v1.01a	alopex	Add D3DXFont.
+* @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
+* @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
+* @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
 */
 #pragma once
 
@@ -47,6 +49,9 @@ private:
 	D3DPRESENT_PARAMETERS m_D3D9pp;		//The Direct3D 9 Parameters
 	ID3DXFont* m_pD3DXFont;	//The Direct3D 9 Font
 	wchar_t m_wcD3D9AdapterType[ADAPTERTYPESIZE];	//The Direct3D 9 AdapterType(eg:NVIDIA GeForce GT750M)
+
+	CRITICAL_SECTION m_cs;	//Thread Safe(CriticalSection)
+	bool m_bThreadSafe;		//Thread Safe Status
 
 public:
 	DirectGraphics();	//DirectGraphics Constructor Function

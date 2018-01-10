@@ -6,13 +6,16 @@
 * @file		DirectGraphics.cpp
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.11a
-* @date		2017-11-2	v1.00a	alopex	Create Project
-* @date		2017-12-2	v1.01a	alopex	Add D3DXFont
-* @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library
+* @version	v1.21a
+* @date		2017-11-2	v1.00a	alopex	Create Project.
+* @date		2017-12-2	v1.01a	alopex	Add D3DXFont.
+* @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
+* @date		2018-1-2	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
+* @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
 */
 #include "DirectCommon.h"
 #include "DirectGraphics.h"
+#include "DirectThreadSafe.h"
 
 //------------------------------------------------------------------
 // @Function:	 DirectGraphics()
@@ -23,6 +26,9 @@
 //------------------------------------------------------------------
 DirectGraphics::DirectGraphics()
 {
+	m_bThreadSafe = true;									//线程安全
+	if (m_bThreadSafe) InitializeCriticalSection(&m_cs);	//初始化临界区
+
 	m_pD3D9 = NULL;	//IDirect3D9接口指针初始化(NULL)
 	m_pD3D9Device = NULL;	//IDirect3DDevice9接口指针初始化(NULL)
 	m_pD3DXFont = NULL;		//ID3DXFont接口指针初始化(NULL)
@@ -43,6 +49,8 @@ DirectGraphics::~DirectGraphics()
 	SAFE_RELEASE(m_pD3DXFont);		//ID3DXFont接口释放
 	SAFE_RELEASE(m_pD3D9Device);	//IDirect3D9接口指针释放
 	SAFE_RELEASE(m_pD3D9);	//IDirect3DDevice9接口指针释放
+
+	if (m_bThreadSafe) DeleteCriticalSection(&m_cs);	//删除临界区
 }
 
 //------------------------------------------------------------------
@@ -54,6 +62,7 @@ DirectGraphics::~DirectGraphics()
 //------------------------------------------------------------------
 IDirect3D9* WINAPI DirectGraphics::DirectGraphicsGetObject(void) const
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return m_pD3D9;
 }
 
@@ -66,6 +75,7 @@ IDirect3D9* WINAPI DirectGraphics::DirectGraphicsGetObject(void) const
 //------------------------------------------------------------------
 IDirect3DDevice9* WINAPI DirectGraphics::DirectGraphicsGetDevice(void) const
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return m_pD3D9Device;
 }
 
@@ -78,6 +88,7 @@ IDirect3DDevice9* WINAPI DirectGraphics::DirectGraphicsGetDevice(void) const
 //------------------------------------------------------------------
 const D3DCAPS9* WINAPI DirectGraphics::DirectGraphicsGetCaps(void) const
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return (&m_D3D9Caps);
 }
 
@@ -90,6 +101,7 @@ const D3DCAPS9* WINAPI DirectGraphics::DirectGraphicsGetCaps(void) const
 //------------------------------------------------------------------
 const D3DPRESENT_PARAMETERS* WINAPI DirectGraphics::DirectGraphicsGetPresentParameters(void) const
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return (&m_D3D9pp);
 }
 
@@ -102,6 +114,7 @@ const D3DPRESENT_PARAMETERS* WINAPI DirectGraphics::DirectGraphicsGetPresentPara
 //------------------------------------------------------------------
 const wchar_t* WINAPI DirectGraphics::DirectGraphicsAdapterType(void) const
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return m_wcD3D9AdapterType;
 }
 
@@ -114,6 +127,7 @@ const wchar_t* WINAPI DirectGraphics::DirectGraphicsAdapterType(void) const
 //------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	int nSize;
 	int Vp;
 	D3DADAPTER_IDENTIFIER9 D3D9Adapter;
@@ -170,6 +184,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd)
 //------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd, bool bIsWindowed)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	int nSize;
 	int Vp;
 	D3DADAPTER_IDENTIFIER9 D3D9Adapter;
@@ -228,6 +243,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd, bool bIsWindowed)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd, bool bIsWindowed, int nScreenWidth, int nScreenHeight)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	int nSize;
 	int Vp;
 	D3DADAPTER_IDENTIFIER9 D3D9Adapter;
@@ -283,6 +299,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsInit(HWND hWnd, bool bIsWindowed, i
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsInit(D3DPRESENT_PARAMETERS D3D9pp)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	int nSize;
 	int Vp;
 	D3DADAPTER_IDENTIFIER9 D3D9Adapter;
@@ -337,6 +354,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsInit(D3DPRESENT_PARAMETERS D3D9pp)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsBeginScene(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->BeginScene());	//开始渲染
 	return S_OK;//OK
 }
@@ -350,6 +368,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsBeginScene(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsEndScene(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->EndScene());		//结束渲染
 	return S_OK;//OK
 }
@@ -363,6 +382,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsEndScene(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsBegin(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0));		//清空图像
 	VERIFY(m_pD3D9Device->BeginScene());	//开始渲染
 	return S_OK;//OK
@@ -377,6 +397,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsBegin(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsEnd(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->EndScene());		//结束渲染
 	VERIFY(m_pD3D9Device->Present(NULL, NULL, NULL, NULL));		//提交渲染(显示)
 	return S_OK;//OK
@@ -391,6 +412,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsEnd(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsPresent(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->Present(NULL,NULL,NULL,NULL));		//提交渲染(显示)
 	return S_OK;//OK
 }
@@ -404,6 +426,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsPresent(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsClear(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0));		//清空图像
 	return S_OK;//OK
 }
@@ -417,6 +440,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsClear(void)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsClear(DWORD dwColor)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pD3D9Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, dwColor, 1.0f, 0));		//清空图像
 	return S_OK;//OK
 }
@@ -430,6 +454,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsClear(DWORD dwColor)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit()
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(D3DXCreateFont(m_pD3D9Device, 20, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, _T("Consolas"), &m_pD3DXFont));
 	return S_OK;//OK
 }
@@ -443,6 +468,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit()
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(D3DXCreateFont(m_pD3D9Device, nFontSize, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, _T("Consolas"), &m_pD3DXFont));
 	return S_OK;//OK
 }
@@ -457,6 +483,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize)
 //---------------------------------------------------------------------------------------------------
 HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(D3DXCreateFont(m_pD3D9Device, nFontSize, 0, 0, 1, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, 0, lpszFontType, &m_pD3DXFont));
 	return S_OK;//OK
 }
@@ -470,6 +497,7 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsFontInit(int nFontSize, LPWSTR lpsz
 //---------------------------------------------------------------------------------------------------
 void WINAPI DirectGraphics::DirectGraphicsFontDrawText(HWND hWnd)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	RECT Rect;
 
 	GetClientRect(hWnd, &Rect);
@@ -486,6 +514,7 @@ void WINAPI DirectGraphics::DirectGraphicsFontDrawText(HWND hWnd)
 //---------------------------------------------------------------------------------------------------
 void WINAPI DirectGraphics::DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	RECT Rect;
 
 	GetClientRect(hWnd, &Rect);
