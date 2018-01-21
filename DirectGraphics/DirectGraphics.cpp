@@ -29,11 +29,11 @@ DirectGraphics::DirectGraphics()
 	m_bThreadSafe = true;									//线程安全
 	if (m_bThreadSafe) InitializeCriticalSection(&m_cs);	//初始化临界区
 
-	m_pD3D9 = NULL;	//IDirect3D9接口指针初始化(NULL)
+	m_pD3D9 = NULL;			//IDirect3D9接口指针初始化(NULL)
 	m_pD3D9Device = NULL;	//IDirect3DDevice9接口指针初始化(NULL)
 	m_pD3DXFont = NULL;		//ID3DXFont接口指针初始化(NULL)
 	ZeroMemory(&m_D3D9Caps, sizeof(m_D3D9Caps));	//清空m_D3D9Caps内存区域
-	ZeroMemory(&m_D3D9pp, sizeof(m_D3D9pp));	//清空m_D3D9pp内存区域
+	ZeroMemory(&m_D3D9pp, sizeof(m_D3D9pp));		//清空m_D3D9pp内存区域
 	ZeroMemory(m_wcD3D9AdapterType, sizeof(wchar_t)*ADAPTERTYPESIZE);	//清空m_wcD3D9AdapterType内存区域
 }
 
@@ -48,7 +48,7 @@ DirectGraphics::~DirectGraphics()
 {
 	SAFE_RELEASE(m_pD3DXFont);		//ID3DXFont接口释放
 	SAFE_RELEASE(m_pD3D9Device);	//IDirect3D9接口指针释放
-	SAFE_RELEASE(m_pD3D9);	//IDirect3DDevice9接口指针释放
+	SAFE_RELEASE(m_pD3D9);			//IDirect3DDevice9接口指针释放
 
 	if (m_bThreadSafe) DeleteCriticalSection(&m_cs);	//删除临界区
 }
