@@ -28,7 +28,11 @@ ReadMe.txt 文件对于类中的一些函数参数进行解释和备注
 // 参数: UINT BackBufferWidth 后台缓存中表面宽度(单位是像素)
 // 参数: UINT BackBufferHeight 后台缓存中表面高度(单位是像素)
 // 参数: _D3DFORMAT BackBufferFormat 后台缓存中表面的像素格式
+//		 D3DFMT_R8G8B8: 24位像素格式RGB各8位
+//		 D3DFMT_X8R8G8B8: 32位像素格式8位未使用,RGB各8位
 //		 D3DFMT_A8R8G8B8: 32位像素格式ARGB各8位
+//		 D3DFMT_A16B16G16R16F: 64位像素格式A16位B16位G16位R16位
+//		 D3DFMT_A32B32G32R32F: 128位像素格式A32位B32位G32位R32位
 // 参数: UINT BackBufferCount 后台缓存中表面数量
 // 参数: _D3DMULTISAMPLE_TYPE MultiSampleType 后台缓存中表面所使用的多重采样
 //		 D3DMULTISAMPLE_NONE: 不使用多重采样

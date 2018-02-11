@@ -12,6 +12,7 @@
 * @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
 * @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
 * @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
+* @date		2018-2-11	v1.22a	alopex	Add D3D9 Lost Device Function.
 */
 #pragma once
 
@@ -62,6 +63,13 @@ public:
 	virtual const D3DCAPS9* WINAPI DirectGraphicsGetCaps(void) const;		//DirectGraphics Get Caps(~DirectGraphics获取D3D9设备状态)
 	virtual const D3DPRESENT_PARAMETERS* WINAPI DirectGraphicsGetPresentParameters(void) const;	//DirectGraphics Get Present Parameters(~DirectGraphics获取D3D9显卡参数)
 	virtual const wchar_t* WINAPI DirectGraphicsAdapterType(void) const;	//DirectGraphics Get Adapter Type(~DirectGraphics获取D3D9显卡型号)
+	virtual const ID3DXFont* WINAPI DirectGraphicsGetFont(void) const;		//DirectGraphics Get Font(~DirectGraphics获取D3D9字体)
+
+	virtual HRESULT WINAPI DirectGraphicsTestCooperativeLevel(void) const;	//DirectGraphics Get TestCooperativeLevel获取D3D9当前状态
+	virtual HRESULT WINAPI DirectGraphicsResetDevice(void);					//DirectGraphics Reset Direct3D 9 Device重置D3D9设备
+	virtual HRESULT WINAPI DirectGraphicsGetBackBuffer(IDirect3DSurface9**& ppD3D9BackBuffer);	//DirectGraphics Get BackBuffer获取D3D9表面
+
+	virtual HRESULT WINAPI DirectGraphicsReset(void);						//DirectGraphics Reset & Init重置DirectGraphics并重新初始化
 
 	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd);					//DirectGraphics Initialization(W:640 H:480 Windowed)(~DirectGraphics初始化:窗口宽度:640,窗口高度:480)
 	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd, bool bIsWindowed);	//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)

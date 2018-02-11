@@ -12,6 +12,7 @@
 * @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
 * @date		2018-1-2	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
 * @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
+* @date		2018-2-11	v1.22a	alopex	Add D3D9 Lost Device Function.
 */
 #include "DirectCommon.h"
 #include "DirectGraphics.h"
@@ -116,6 +117,73 @@ const wchar_t* WINAPI DirectGraphics::DirectGraphicsAdapterType(void) const
 {
 	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return m_wcD3D9AdapterType;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetFont(void) const
+// @Purpose: DirectGraphics读取D3D9 GPU字体
+// @Since: v1.00a
+// @Para: None
+// @Return: ID3DXFont*(ID3DXFont类型指针)
+//------------------------------------------------------------------
+const ID3DXFont* WINAPI DirectGraphics::DirectGraphicsGetFont(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_pD3DXFont;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsTestCooperativeLevel(void) const
+// @Purpose: DirectGraphics读取D3D9 当前状态
+// @Since: v1.00a
+// @Para: None
+// @Return: HRESULT(当前状态:正常:S_OK,错误:E_FAIL)
+//			D3DERR_DEVICELOST:设备丢失(无法Reset)
+//			D3DERR_DEVICENOTRESET:设备未Reset(可以Reset)
+//------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsTestCooperativeLevel(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return (m_pD3D9Device->TestCooperativeLevel());
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsResetDevice(void) const
+// @Purpose: DirectGraphics重置D3D9 初始设置
+// @Since: v1.00a
+// @Para: None
+// @Return: HRESULT(当前状态:正常:S_OK,错误:E_FAIL)
+//------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsResetDevice(void)
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return (m_pD3D9Device->Reset(&m_D3D9pp));
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetBackBuffer(IDirect3DSurface9* pD3D9BackBuffer)
+// @Purpose: DirectGraphics获取D3D9 表面
+// @Since: v1.00a
+// @Para: None
+// @Return: HRESULT(当前状态:正常:S_OK,错误:E_FAIL)
+//------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsGetBackBuffer(IDirect3DSurface9**& ppD3D9BackBuffer)
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return (m_pD3D9Device->GetBackBuffer(NULL, NULL, D3DBACKBUFFER_TYPE_MONO, ppD3D9BackBuffer));
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsReset(void)
+// @Purpose: DirectGraphics 重置
+// @Since: v1.00a
+// @Para: None
+// @Return: HRESULT(重置状态:成功:S_OK,失败:E_FAIL)
+//------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsReset(void)
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return (m_pD3DXFont ? m_pD3DXFont->OnLostDevice() : S_OK);
 }
 
 //------------------------------------------------------------------
