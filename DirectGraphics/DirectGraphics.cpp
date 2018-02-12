@@ -186,6 +186,19 @@ HRESULT WINAPI DirectGraphics::DirectGraphicsReset(void)
 	return (m_pD3DXFont ? m_pD3DXFont->OnLostDevice() : S_OK);
 }
 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsCreateOffscreenPlainSurface(UINT nWidth, UINT nHeight, D3DFORMAT D3DFormat, D3DPOOL D3DPool, IDirect3DSurface9**& ppD3D9Surface)
+// @Purpose: DirectGraphics 重置
+// @Since: v1.00a
+// @Para: None
+// @Return: HRESULT(状态:成功:S_OK,失败:E_FAIL)
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
+HRESULT WINAPI DirectGraphics::DirectGraphicsCreateOffscreenPlainSurface(UINT nWidth, UINT nHeight, D3DFORMAT D3DFormat, D3DPOOL D3DPool, IDirect3DSurface9**& ppD3D9Surface)
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_pD3D9Device->CreateOffscreenPlainSurface(nWidth, nHeight, D3DFormat, D3DPool, ppD3D9Surface, NULL);
+}
+
 //------------------------------------------------------------------
 // @Function:	 DirectGraphicsInit(HWND hWnd)
 // @Purpose: DirectGraphics 初始化

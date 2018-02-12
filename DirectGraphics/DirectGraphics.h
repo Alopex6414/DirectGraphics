@@ -68,8 +68,9 @@ public:
 	virtual HRESULT WINAPI DirectGraphicsTestCooperativeLevel(void) const;	//DirectGraphics Get TestCooperativeLevel获取D3D9当前状态
 	virtual HRESULT WINAPI DirectGraphicsResetDevice(void);					//DirectGraphics Reset Direct3D 9 Device重置D3D9设备
 	virtual HRESULT WINAPI DirectGraphicsGetBackBuffer(IDirect3DSurface9**& ppD3D9BackBuffer);	//DirectGraphics Get BackBuffer获取D3D9表面
-
 	virtual HRESULT WINAPI DirectGraphicsReset(void);						//DirectGraphics Reset & Init重置DirectGraphics并重新初始化
+
+	virtual HRESULT WINAPI DirectGraphicsCreateOffscreenPlainSurface(UINT nWidth, UINT nHeight, D3DFORMAT D3DFormat, D3DPOOL D3DPool, IDirect3DSurface9**& ppD3D9Surface);//DirectGraphics Create Off-Screen Plain Surface创建离屏表面
 
 	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd);					//DirectGraphics Initialization(W:640 H:480 Windowed)(~DirectGraphics初始化:窗口宽度:640,窗口高度:480)
 	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd, bool bIsWindowed);	//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)
