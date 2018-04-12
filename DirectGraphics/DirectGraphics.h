@@ -13,6 +13,7 @@
 * @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
 * @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
 * @date		2018-2-11	v1.22a	alopex	Add D3D9 Lost Device Function.
+* @date		2018-4-12	v1.23a	alopex	Add Macro Call Mode.
 */
 #pragma once
 
@@ -25,6 +26,8 @@
 #else
 #define DIRECTGRAPHICS_API	__declspec(dllimport)
 #endif
+
+#define DIRECTGRAPHICS_CALLMODE	__stdcall
 
 #ifndef USER_SCREENWIDTH
 #define USER_SCREENWIDTH	640		//UserScreenWidth(~窗口区域宽度)
@@ -58,37 +61,37 @@ public:
 	DirectGraphics();					//DirectGraphics Constructor Function(~DirectGraphics构造函数)
 	~DirectGraphics();					//DirectGraphics Destructor	Function(~DirectGraphics析构函数)
 
-	virtual IDirect3D9* WINAPI DirectGraphicsGetObject(void) const;			//DirectGraphics Get Object(~DirectGraphics获取D3D9对象)
-	virtual IDirect3DDevice9* WINAPI DirectGraphicsGetDevice(void) const;	//DirectGraphics Get Device(~DirectGraphics获取D3D9设备对象)
-	virtual const D3DCAPS9* WINAPI DirectGraphicsGetCaps(void) const;		//DirectGraphics Get Caps(~DirectGraphics获取D3D9设备状态)
-	virtual const D3DPRESENT_PARAMETERS* WINAPI DirectGraphicsGetPresentParameters(void) const;	//DirectGraphics Get Present Parameters(~DirectGraphics获取D3D9显卡参数)
-	virtual const wchar_t* WINAPI DirectGraphicsAdapterType(void) const;	//DirectGraphics Get Adapter Type(~DirectGraphics获取D3D9显卡型号)
-	virtual const ID3DXFont* WINAPI DirectGraphicsGetFont(void) const;		//DirectGraphics Get Font(~DirectGraphics获取D3D9字体)
+	virtual IDirect3D9* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetObject(void) const;		//DirectGraphics Get Object(~DirectGraphics获取D3D9对象)
+	virtual IDirect3DDevice9* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetDevice(void) const;	//DirectGraphics Get Device(~DirectGraphics获取D3D9设备对象)
+	virtual const D3DCAPS9* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetCaps(void) const;		//DirectGraphics Get Caps(~DirectGraphics获取D3D9设备状态)
+	virtual const D3DPRESENT_PARAMETERS* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetPresentParameters(void) const;	//DirectGraphics Get Present Parameters(~DirectGraphics获取D3D9显卡参数)
+	virtual const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphicsAdapterType(void) const;	//DirectGraphics Get Adapter Type(~DirectGraphics获取D3D9显卡型号)
+	virtual const ID3DXFont* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetFont(void) const;		//DirectGraphics Get Font(~DirectGraphics获取D3D9字体)
 
-	virtual HRESULT WINAPI DirectGraphicsTestCooperativeLevel(void) const;	//DirectGraphics Get TestCooperativeLevel获取D3D9当前状态
-	virtual HRESULT WINAPI DirectGraphicsResetDevice(void);					//DirectGraphics Reset Direct3D 9 Device重置D3D9设备
-	virtual HRESULT WINAPI DirectGraphicsGetBackBuffer(IDirect3DSurface9**& ppD3D9BackBuffer);	//DirectGraphics Get BackBuffer获取D3D9表面
-	virtual HRESULT WINAPI DirectGraphicsReset(void);						//DirectGraphics Reset & Init重置DirectGraphics并重新初始化
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsTestCooperativeLevel(void) const;	//DirectGraphics Get TestCooperativeLevel获取D3D9当前状态
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsResetDevice(void);				//DirectGraphics Reset Direct3D 9 Device重置D3D9设备
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsGetBackBuffer(IDirect3DSurface9**& ppD3D9BackBuffer);	//DirectGraphics Get BackBuffer获取D3D9表面
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsReset(void);						//DirectGraphics Reset & Init重置DirectGraphics并重新初始化
 
-	virtual HRESULT WINAPI DirectGraphicsCreateOffscreenPlainSurface(UINT nWidth, UINT nHeight, D3DFORMAT D3DFormat, D3DPOOL D3DPool, IDirect3DSurface9**& ppD3D9Surface);//DirectGraphics Create Off-Screen Plain Surface创建离屏表面
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsCreateOffscreenPlainSurface(UINT nWidth, UINT nHeight, D3DFORMAT D3DFormat, D3DPOOL D3DPool, IDirect3DSurface9**& ppD3D9Surface);//DirectGraphics Create Off-Screen Plain Surface创建离屏表面
 
-	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd);					//DirectGraphics Initialization(W:640 H:480 Windowed)(~DirectGraphics初始化:窗口宽度:640,窗口高度:480)
-	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd, bool bIsWindowed);	//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)
-	virtual HRESULT WINAPI DirectGraphicsInit(HWND hWnd, bool bIsWindowed, int nScreenWidth, int nScreenHeight);	//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)
-	virtual HRESULT WINAPI DirectGraphicsInit(D3DPRESENT_PARAMETERS D3D9pp);//DirectGraphics Initialization(~DirectGraphics初始化 D3DPRESENT_PARAMETERS结构体参数传入)
-	virtual HRESULT WINAPI DirectGraphicsBeginScene(void);					//DirectGraphics Begin Render(~DirectGraphics开始渲染:不进行清除屏幕)
-	virtual HRESULT WINAPI DirectGraphicsEndScene(void);					//DirectGraphics End Render(~DirectGraphics结束渲染:不进行翻转显示)
-	virtual HRESULT WINAPI DirectGraphicsBegin(void);						//DirectGraphics Begin Render(~DirectGraphics开始渲染:清除屏幕->开始渲染)
-	virtual HRESULT WINAPI DirectGraphicsEnd(void);							//DirectGraphics End Render(~DirectGraphics结束渲染:结束渲染->翻转屏幕)
-	virtual HRESULT WINAPI DirectGraphicsPresent(void);						//DirectGraphics Present Render(~DirectGraphics翻转屏幕)
-	virtual HRESULT WINAPI DirectGraphicsClear(void);						//DirectGraphics Clear Screen(~DirectGraphics清除屏幕:黑色填充)
-	virtual HRESULT WINAPI DirectGraphicsClear(DWORD dwColor);				//DirectGraphics Clear Screen(~DirectGraphics清除屏幕:选定颜色填充)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsInit(HWND hWnd);					//DirectGraphics Initialization(W:640 H:480 Windowed)(~DirectGraphics初始化:窗口宽度:640,窗口高度:480)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsInit(HWND hWnd, bool bIsWindowed);//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsInit(HWND hWnd, bool bIsWindowed, int nScreenWidth, int nScreenHeight);	//DirectGraphics Initialization(~DirectGraphics初始化 <窗口模式>bIsWindowed = true, <全屏模式>bIsWindowed = false)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsInit(D3DPRESENT_PARAMETERS D3D9pp);//DirectGraphics Initialization(~DirectGraphics初始化 D3DPRESENT_PARAMETERS结构体参数传入)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsBeginScene(void);					//DirectGraphics Begin Render(~DirectGraphics开始渲染:不进行清除屏幕)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsEndScene(void);					//DirectGraphics End Render(~DirectGraphics结束渲染:不进行翻转显示)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsBegin(void);						//DirectGraphics Begin Render(~DirectGraphics开始渲染:清除屏幕->开始渲染)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsEnd(void);						//DirectGraphics End Render(~DirectGraphics结束渲染:结束渲染->翻转屏幕)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsPresent(void);					//DirectGraphics Present Render(~DirectGraphics翻转屏幕)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsClear(void);						//DirectGraphics Clear Screen(~DirectGraphics清除屏幕:黑色填充)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsClear(DWORD dwColor);				//DirectGraphics Clear Screen(~DirectGraphics清除屏幕:选定颜色填充)
 	
-	virtual HRESULT WINAPI DirectGraphicsFontInit();						//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化)
-	virtual HRESULT WINAPI DirectGraphicsFontInit(int nFontSize);			//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化:nFontSize:字体大小)
-	virtual HRESULT WINAPI DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType);	//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化:<nFontSize>:字体大小 <lpszFontType>:字体样式)
-	virtual void WINAPI DirectGraphicsFontDrawText(HWND hWnd);							//DirectGraphicsFont Draw Text(~DirectGraphics绘制显卡型号)
-	virtual void WINAPI DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor);		//DirectGraphicsFont Draw Text(~DirectGraphics绘制显卡型号:<dwColor>:字体颜色)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsFontInit();						//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsFontInit(int nFontSize);			//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化:nFontSize:字体大小)
+	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsFontInit(int nFontSize, LPWSTR lpszFontType);	//DirectGraphicsFont Initialization(~DirectGraphics显卡型号字体初始化:<nFontSize>:字体大小 <lpszFontType>:字体样式)
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawText(HWND hWnd);							//DirectGraphicsFont Draw Text(~DirectGraphics绘制显卡型号)
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor);		//DirectGraphicsFont Draw Text(~DirectGraphics绘制显卡型号:<dwColor>:字体颜色)
 };
 
 //Variable Definition
