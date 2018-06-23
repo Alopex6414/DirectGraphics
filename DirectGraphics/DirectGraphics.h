@@ -6,7 +6,7 @@
 * @file		DirectGraphics.h
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.27a
+* @version	v1.28a
 * @date		2017-11-2	v1.00a	alopex	Create Project.
 * @date		2017-12-2	v1.01a	alopex	Add D3DXFont.
 * @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
@@ -18,6 +18,7 @@
 * @date		2018-06-17	v1.25a	alopex	Modify Reset Function.
 * @date		2018-06-18	v1.26a	alopex	Modify D3D9 Clear Function(Background Color).
 * @date		2018-06-21	v1.27a	alopex	Update Function D3DXFont Abort.
+* @date		2018-06-23	v1.28a	alopex	Repair Bugs.
 */
 #pragma once
 
@@ -43,6 +44,7 @@
 
 #define ADAPTERTYPESIZE		64		//AdapterType Size(~存储显卡型号数组)
 #define D3D9FORMATSIZE		64		//D3D9 Format Size(~存储缓冲类型数组)
+#define D3D9SCREENSIZE		64		//D3D9 Format Size(~存储屏幕分辨率数组)
 
 //Struct Definition
 
@@ -60,6 +62,7 @@ private:
 	wchar_t m_wcD3D9AdapterType[ADAPTERTYPESIZE];	//The Direct3D 9 AdapterType(eg:NVIDIA GeForce GT750M)
 	wchar_t m_wcD3D9BackFormat[D3D9FORMATSIZE];		//The Direct3D 9 BackBufferFormat(eg:D3DFMT_A8R8G8B8)
 	wchar_t m_wcD3D9AutoDepthStencilFormat[D3D9FORMATSIZE];	//The Direct3D 9 AutoDepthStencilFormat(eg:D3DFMT_D24S8)
+	wchar_t m_wcD3D9ScreenInfo[D3D9SCREENSIZE];		//The Direct3D 9 Screen Information(eg:D3D9 Vsync on (640x480))
 
 	CRITICAL_SECTION m_cs;				//Thread Safe(CriticalSection)(~D3D9临界区变量)
 	bool m_bThreadSafe;					//Thread Safe Status(~D3D9线程安全状态)
@@ -124,7 +127,8 @@ public:
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextW(LPCWSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color);	//DirectGraphicsFont Draw Text(~DirectGraphics绘制)
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextA(LPCSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color);	//DirectGraphicsFont Draw Text(~DirectGraphics绘制)
 
-	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9Format(LPWSTR pString);		//DirectGraphics Get D3D9 Format(~DirectGraphics D3D9格式)
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9Screen(UINT nWidth, UINT nHeight, LPWSTR pString);			//DirectGraphics Get D3D9 Screen(~DirectGraphics D3D9分辨率)
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9Format(D3DFORMAT Format, LPWSTR pString);						//DirectGraphics Get D3D9 Format(~DirectGraphics D3D9格式)
 };
 
 //Variable Definition
