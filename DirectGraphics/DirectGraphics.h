@@ -6,7 +6,7 @@
 * @file		DirectGraphics.h
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.28a
+* @version	v1.29a
 * @date		2017-11-2	v1.00a	alopex	Create Project.
 * @date		2017-12-2	v1.01a	alopex	Add D3DXFont.
 * @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
@@ -19,6 +19,7 @@
 * @date		2018-06-18	v1.26a	alopex	Modify D3D9 Clear Function(Background Color).
 * @date		2018-06-21	v1.27a	alopex	Update Function D3DXFont Abort.
 * @date		2018-06-23	v1.28a	alopex	Repair Bugs.
+* @date		2018-06-23	v1.29a	alopex	Add Draw Function.
 */
 #pragma once
 
@@ -87,6 +88,11 @@ public:
 	virtual const UINT DIRECTGRAPHICS_CALLMODE DirectGraphicsGetSufaceWidth(void) const;	//DirectGraphics Get Surface Widht(~DirectGraphics获取D3D9设备表面宽度)
 	virtual const UINT DIRECTGRAPHICS_CALLMODE DirectGraphicsGetSufaceHeight(void) const;	//DirectGraphics Get Surface Height(~DirectGraphics获取D3D9设备表面高度)
 
+	virtual const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9AdapterType(void) const;
+	virtual const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9BackFormat(void) const;
+	virtual const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9AutoDepthStencilFormat(void) const;
+	virtual const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9ScreenInfo(void) const;
+
 	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsResetDevice(void);				//DirectGraphics Reset Direct3D 9 Device(~DirectGraphics重置D3D9设备)
 	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsResetFont(void);					//DirectGraphics Reset Direct3D 9 Font(~DirectGraphics重置D3D9字体)
 	virtual HRESULT DIRECTGRAPHICS_CALLMODE DirectGraphicsReset(void);						//DirectGraphics Reset Direct3D 9 All(~DirectGraphics重置DirectGraphics类)
@@ -126,6 +132,10 @@ public:
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawText(HWND hWnd, D3DXCOLOR dwColor);		//DirectGraphicsFont Draw Text(~DirectGraphics绘制显卡型号:<dwColor>:字体颜色)(重载+1)
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextW(LPCWSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color);	//DirectGraphicsFont Draw Text(~DirectGraphics绘制)
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextA(LPCSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color);	//DirectGraphicsFont Draw Text(~DirectGraphics绘制)
+
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextAdapterType(LPRECT pRect, DWORD Format, D3DCOLOR Color);
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextFormat(LPRECT pRect, DWORD Format, D3DCOLOR Color);
+	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsFontDrawTextScreen(LPRECT pRect, DWORD Format, D3DCOLOR Color);
 
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9Screen(UINT nWidth, UINT nHeight, LPWSTR pString);			//DirectGraphics Get D3D9 Screen(~DirectGraphics D3D9分辨率)
 	virtual void DIRECTGRAPHICS_CALLMODE DirectGraphicsGetD3D9Format(D3DFORMAT Format, LPWSTR pString);						//DirectGraphics Get D3D9 Format(~DirectGraphics D3D9格式)

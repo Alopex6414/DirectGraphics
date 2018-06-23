@@ -6,7 +6,7 @@
 * @file		DirectGraphics.cpp
 * @brief	This Program is DirectGraphics DLL Project.
 * @author	Alopex/Helium
-* @version	v1.28a
+* @version	v1.29a
 * @date		2017-11-2	v1.00a	alopex	Create Project.
 * @date		2017-12-2	v1.01a	alopex	Add D3DXFont.
 * @date		2017-12-8	v1.11a	alopex	Code Do Not Rely On MSVCR Library.
@@ -19,6 +19,7 @@
 * @date		2018-06-18	v1.26a	alopex	Modify D3D9 Clear Function(Background Color).
 * @date		2018-06-21	v1.27a	alopex	Update Function D3DXFont Abort.
 * @date		2018-06-23	v1.28a	alopex	Repair Bugs.
+* @date		2018-06-23	v1.29a	alopex	Add Draw Function.
 */
 #include "DirectCommon.h"
 #include "DirectGraphics.h"
@@ -194,6 +195,58 @@ const UINT DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsGetSufaceHeight
 {
 	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	return m_nHeight;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetD3D9AdapterType(void) const
+// @Purpose: DirectGraphics读取D3D9 显卡型号字体
+// @Since: v1.00a
+// @Para: None
+// @Return: UINT
+//------------------------------------------------------------------
+const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsGetD3D9AdapterType(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_wcD3D9AdapterType;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetD3D9BackFormat(void) const
+// @Purpose: DirectGraphics读取D3D9 后台缓存类型格式
+// @Since: v1.00a
+// @Para: None
+// @Return: UINT
+//------------------------------------------------------------------
+const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsGetD3D9BackFormat(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_wcD3D9BackFormat;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetD3D9AutoDepthStencilFormat(void) const
+// @Purpose: DirectGraphics读取D3D9 深度模板缓存类型格式
+// @Since: v1.00a
+// @Para: None
+// @Return: UINT
+//------------------------------------------------------------------
+const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsGetD3D9AutoDepthStencilFormat(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_wcD3D9AutoDepthStencilFormat;
+}
+
+//------------------------------------------------------------------
+// @Function:	 DirectGraphicsGetD3D9ScreenInfo(void) const
+// @Purpose: DirectGraphics读取D3D9 屏幕分辨率信息
+// @Since: v1.00a
+// @Para: None
+// @Return: UINT
+//------------------------------------------------------------------
+const wchar_t* DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsGetD3D9ScreenInfo(void) const
+{
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+	return m_wcD3D9ScreenInfo;
 }
 
 //------------------------------------------------------------------
@@ -920,6 +973,57 @@ void DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsFontDrawTextA(LPCSTR 
 {
 	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	m_pD3DXFont->DrawTextA(NULL, pString, Count, pRect, Format, Color);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontDrawTextA(LPCSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color)
+// @Purpose: DirectGraphics 绘制HAL信息
+// @Since: v1.01a
+// @Para: LPCSTR pString		//字符数组(ASCII)
+// @Para: INT Count				//数组长度(-1)
+// @Para: LPRECT pRect			//绘制区域
+// @Para: DWORD Format			//绘制格式
+// @Para: D3DCOLOR Color		//绘制颜色
+// @Return: None
+//-----------------------------------------------------------------------------------------------------------------------------
+void DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsFontDrawTextAdapterType(LPRECT pRect, DWORD Format, D3DCOLOR Color)
+{
+	DirectGraphicsFontDrawTextW(m_wcD3D9AdapterType, -1, pRect, Format, Color);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontDrawTextA(LPCSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color)
+// @Purpose: DirectGraphics 绘制HAL信息
+// @Since: v1.01a
+// @Para: LPCSTR pString		//字符数组(ASCII)
+// @Para: INT Count				//数组长度(-1)
+// @Para: LPRECT pRect			//绘制区域
+// @Para: DWORD Format			//绘制格式
+// @Para: D3DCOLOR Color		//绘制颜色
+// @Return: None
+//-----------------------------------------------------------------------------------------------------------------------------
+void DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsFontDrawTextFormat(LPRECT pRect, DWORD Format, D3DCOLOR Color)
+{
+	wchar_t wcFormatArray[MAX_PATH] = { 0 };
+
+	swprintf_s(wcFormatArray, L"%s (%s)", m_wcD3D9BackFormat, m_wcD3D9AutoDepthStencilFormat);
+	DirectGraphicsFontDrawTextW(wcFormatArray, -1, pRect, Format, Color);
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
+// @Function:	 DirectGraphicsFontDrawTextA(LPCSTR pString, INT Count, LPRECT pRect, DWORD Format, D3DCOLOR Color)
+// @Purpose: DirectGraphics 绘制HAL信息
+// @Since: v1.01a
+// @Para: LPCSTR pString		//字符数组(ASCII)
+// @Para: INT Count				//数组长度(-1)
+// @Para: LPRECT pRect			//绘制区域
+// @Para: DWORD Format			//绘制格式
+// @Para: D3DCOLOR Color		//绘制颜色
+// @Return: None
+//-----------------------------------------------------------------------------------------------------------------------------
+void DIRECTGRAPHICS_CALLMODE DirectGraphics::DirectGraphicsFontDrawTextScreen(LPRECT pRect, DWORD Format, D3DCOLOR Color)
+{
+	DirectGraphicsFontDrawTextW(m_wcD3D9ScreenInfo, -1, pRect, Format, Color);
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------
